@@ -7,6 +7,10 @@ export class DataProcessorService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async processData(body: any) {
+
+    console.log(body);
+    
+
     for (const dataObj in body) {
       const park = body[dataObj].Parking;
       const lightingInfo = {
@@ -36,14 +40,19 @@ export class DataProcessorService {
         });
       }
 
-      if (lightingInfo.timeStamp != null)
+      const brightness = isNaN(lightingInfo.brightness) ? 100 : parseInt(lightingInfo.brightness);
+      console.log("_____________________________________________________________________________");
+      console.log(brightness);
+      console.log("_____________________________________________________________________________");
+      
+      if (!isNaN(lightingInfo.timeStamp))
         await this.prismaService.lighting.create({
           data: {
             timeStamp: new Date(lightingInfo.timeStamp).toISOString(),
-            Temperature: lightingInfo.Temperature ?? 0,
-            Humidity: lightingInfo.Humidity ?? 0,
-            heatIndex: lightingInfo.heatIndex ?? 0,
-            brightness: lightingInfo.brightness ?? 0,
+            Temperature: parseFloat(lightingInfo.Temperature) ?? 0,
+            Humidity: parseFloat(lightingInfo.Humidity) ?? 0,
+            heatIndex: parseFloat(lightingInfo.heatIndex) ?? 0,
+            brightness: brightness,
           },
         });
     }
