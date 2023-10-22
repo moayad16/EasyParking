@@ -21,7 +21,7 @@ export class DataProcessorService {
         brightness: body[dataObj].LedBrightness,
       };
 
-      if (park != null && park.status === 1) {
+      if (park != null && (park.status === 1 || park.status==="1")) {
         await this.prismaService.parking.update({
           where: {
             id: park.id,
@@ -38,23 +38,26 @@ export class DataProcessorService {
               }),
           },
         });
-      }
-
-      const brightness = isNaN(lightingInfo.brightness) ? 100 : parseInt(lightingInfo.brightness);
-      console.log("_____________________________________________________________________________");
-      console.log(brightness);
-      console.log("_____________________________________________________________________________");
-      
-      if (!isNaN(lightingInfo.timeStamp))
+      }      
+      if (
+        !isNaN(lightingInfo.timeStamp) &&
+        !isNaN(lightingInfo.Temperature) &&
+        !isNaN(lightingInfo.Humidity) &&
+        !isNaN(lightingInfo.heatIndex) &&
+        !isNaN(lightingInfo.brightness)
+      )
         await this.prismaService.lighting.create({
           data: {
             timeStamp: new Date(lightingInfo.timeStamp).toISOString(),
             Temperature: parseFloat(lightingInfo.Temperature) ?? 0,
             Humidity: parseFloat(lightingInfo.Humidity) ?? 0,
             heatIndex: parseFloat(lightingInfo.heatIndex) ?? 0,
-            brightness: brightness,
+            brightness: parseInt(lightingInfo.brightness) ?? 0,
           },
         });
+        else
+        console.log("some data is missing");
+        
     }
 
     return 'Success';
