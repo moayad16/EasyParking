@@ -72,7 +72,9 @@ export class ParkingService {
           currentCap: newCap
         }
       })
+
+      return "Success"
+    
     }
-    return "Success"
   }
 }
