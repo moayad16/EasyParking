@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { ParkingService } from './parking.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { createParkDto } from './dtos/create.park.dto';
@@ -17,8 +17,8 @@ export class ParkingController {
         return this.parkingService.createPark(Body);
     }
 
-    @Post('/updateCap')
-    async updateCap(@Body() Body: any) {
-        return this.parkingService.updateCap(Body);
+    @Get('/updateCap')
+    async updateCap(@Query() id: string, @Query() status: string) {
+        return this.parkingService.updateCap({id, status});
     }
 }
