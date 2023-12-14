@@ -14,7 +14,6 @@ interface updateCap {
   status: string;
 }
 
-
 @Injectable()
 export class ParkingService {
   constructor(private readonly prismaService: PrismaService) {}
@@ -48,14 +47,18 @@ export class ParkingService {
 
   }
 
-  async updateCap(Body: updateCap): Promise<string> {
+  async updateCap(Query: updateCap): Promise<string> {
+    
+    console.log(Query);
+    
+
     const park = await this.prismaService.parking.findUnique({
       where: {
-        id: Body.id
+        id: Query.id
       }
     })
 
-    const newCap = (Body.status === "1")? park.currentCap + 1 : park.currentCap - 1;
+    const newCap = (Query.status === "1")? park.currentCap + 1 : park.currentCap - 1;
 
     if (newCap < 0 || newCap > park.maxCap) {
       return "Error: Capacity cannot be negative or exceed maximum capacity"
@@ -66,7 +69,7 @@ export class ParkingService {
     else {
       await this.prismaService.parking.update({
         where: {
-          id: Body.id
+          id: Query.id
         },
         data: {
           currentCap: newCap

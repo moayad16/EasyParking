@@ -18,7 +18,7 @@ export class ParkingController {
     }
 
     @Get('/updateCap')
-    async updateCap(@Query() id: string, @Query() status: string) {
-        return this.parkingService.updateCap({id, status});
+    async updateCap(@Query() info: {status: string, id: string}) {
+        return this.parkingService.updateCap(info);
     }
 }
