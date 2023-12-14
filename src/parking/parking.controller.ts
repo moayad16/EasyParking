@@ -16,4 +16,9 @@ export class ParkingController {
     async createPark(@Body() Body: createParkDto) {        
         return this.parkingService.createPark(Body);
     }
+
+    @Post('/updateCap')
+    async updateCap(@Body() Body: any) {
+        return this.parkingService.updateCap(Body);
+    }
 }

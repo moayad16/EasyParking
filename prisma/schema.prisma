@@ -18,12 +18,3 @@ model parking {
   maxCap    Int
   currentCap Int
 }
-
-model lighting {
-  id          String   @id @default(cuid()) @map("_id")
-  timeStamp   DateTime
-  Humidity    Float
-  Temperature Float
-  heatIndex   Float
-  brightness  Int
-}
