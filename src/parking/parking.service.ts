@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { HttpStatus } from '@nestjs/common';
 
 interface Parking {
   name: string;
@@ -47,7 +48,7 @@ export class ParkingService {
 
   }
 
-  async updateCap(Query: updateCap): Promise<string> {
+  async updateCap(Query: updateCap): Promise<{status: number, message: string}> {
     
     console.log(Query);
     
@@ -61,10 +62,17 @@ export class ParkingService {
     const newCap = (Query.status === "1")? park.currentCap + 1 : park.currentCap - 1;
 
     if (newCap < 0 || newCap > park.maxCap) {
-      return "Error: Capacity cannot be negative or exceed maximum capacity"
+      return {
+        status: HttpStatus.BAD_REQUEST,
+        message:
+          'Error: Capacity cannot be negative or exceed maximum capacity'
+      };
     }
     else if (newCap > park.maxCap) {
-      return "Error: Capacity cannot exceed maximum capacity"
+      return {
+        status: HttpStatus.BAD_REQUEST,
+        message: 'Error: Capacity cannot be negative or exceed maximum capacity',
+      };
     }
     else {
       await this.prismaService.parking.update({
@@ -76,7 +84,10 @@ export class ParkingService {
         }
       })
 
-      return "Success"
+      return {
+        status: HttpStatus.OK,
+        message: 'Successfully updated capacity'
+      }
     
     }
   }

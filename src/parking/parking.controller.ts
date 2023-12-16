@@ -1,6 +1,5 @@
 import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { ParkingService } from './parking.service';
-import { PrismaService } from 'src/prisma/prisma.service';
 import { createParkDto } from './dtos/create.park.dto';
 
 @Controller('parking')
@@ -9,6 +8,8 @@ export class ParkingController {
 
     @Get('/getAllParkingSpots')
     async getParking() {
+        console.log('getParking');
+        
         return this.parkingService.getParking();
     }
 
